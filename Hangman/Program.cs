@@ -17,8 +17,11 @@ namespace Hangman
         //holds word to guess
         static string wordToGuess = string.Empty;
 
+        //wordToGuess with spaces (ie: W O R D T O G U E S S)
+        static string wordToGuessSpaces = string.Empty;
+
         //used for combined correct guesses and underscores (ie: if word is "baseball" B A _ E B A _ _ )
-        static string underscoresGuessTempString = string.Empty;
+        static string underscoreGuessTempString = string.Empty;
 
         //number of wrong guesses
         static int wrongGuessCount = 0;
@@ -26,10 +29,10 @@ namespace Hangman
         //used to determine how many "_ " strings to display
         static int numUnderscore = wordToGuess.Length;
 
-        //return dashes and letters
-        //static string underscores = new String('_', numUnderscore);
-       
-            //String.Concat(Enumerable.Repeat("_ ", numUnderscore));
+        //return string with correct number of underscorse
+        static string underscores = new String('_', numUnderscore);
+
+        //String.Concat(Enumerable.Repeat("_ ", numUnderscore));
 
         //used to compare with wordToGuess and determine if word is complete
         static string correctGuessString = string.Empty;
@@ -70,7 +73,8 @@ namespace Hangman
                     while (!(correctGuessString.Contains(wordToGuess)) && wrongGuessCount < 8)
                     {
                         BuildTheGallows(wrongGuessCount);
-                        WordBuilder(guessCurrent);
+                        //WordBuilder(guessCurrent);
+                        guessCurrent = String.Empty;
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("                                Incorrect Letters: " + incorrectGuessString);
                         Console.ResetColor();
@@ -81,7 +85,6 @@ namespace Hangman
                         {
                             IsGuessCorrect(guessCurrent);
                             Console.Clear();
-                            guessCurrent = String.Empty;
                         }
 
                         if (wrongGuessCount >= 8)
@@ -92,9 +95,9 @@ namespace Hangman
                             gameOver = true;
                             Console.Clear();
                         }
-                        if (correctGuessString.Contains(wordToGuess)|| guessCurrent == wordToGuess)
+                        if (correctGuessString.Contains(wordToGuess) || guessCurrent == wordToGuess)
                         {
-                            WordBuilder(guessCurrent);
+                            //WordBuilder(guessCurrent);
                             Console.WriteLine("You won the game! ...not very exciting, is it?");
                             Console.ResetColor();
                             Console.ReadKey();
@@ -159,16 +162,16 @@ namespace Hangman
         {
             //create list of 10 words to guess
             List<string> WordList = new List<string>();
-            WordList.Add("running");
+            WordList.Add("indulge");
             WordList.Add("throwing");
-            WordList.Add("jumping");
-            WordList.Add("falling");
-            WordList.Add("tripping");
-            WordList.Add("laughing");
-            WordList.Add("talking");
-            WordList.Add("turning");
-            WordList.Add("burning");
-            WordList.Add("exploding");
+            WordList.Add("negative");
+            WordList.Add("zebra");
+            WordList.Add("cowabunga");
+            WordList.Add("reactor");
+            WordList.Add("furnace");
+            WordList.Add("duckling");
+            WordList.Add("anteater");
+            WordList.Add("fervently");
 
             //sets random number for the game
             Random rng = new Random();
@@ -187,56 +190,151 @@ namespace Hangman
         {
             if (wrongGuessCount == 0)
             {
-                //Console.Clear();
-                Console.WriteLine("gallows0");
-                return true;
+                Console.WriteLine(
+                @"   _________   " + Environment.NewLine +
+                @"   |/      |   " + Environment.NewLine +
+                @"   |           " + Environment.NewLine +
+                @"   |           " + Environment.NewLine +
+                @"   |           " + Environment.NewLine +
+                @"   |           " + Environment.NewLine +
+                @"   |           " + Environment.NewLine +
+                @"   |           " + Environment.NewLine +
+                @"___|___        " + Environment.NewLine);
+                Console.WriteLine();
+                Console.WriteLine((8 - wrongGuessCount) + " guesses left!");
+                Console.WriteLine();
             }
             if (wrongGuessCount == 1)
             {
-                //Console.Clear();
-                Console.WriteLine("gallows1");
-                return true;
+                Console.WriteLine(
+                @"   _________   " + Environment.NewLine +
+                @"   |/      |   " + Environment.NewLine +
+                @"   |      ( )  " + Environment.NewLine +
+                @"   |           " + Environment.NewLine +
+                @"   |           " + Environment.NewLine +
+                @"   |           " + Environment.NewLine +
+                @"   |           " + Environment.NewLine +
+                @"   |           " + Environment.NewLine +
+                @"___|___        " + Environment.NewLine);
+                Console.WriteLine();
+                Console.WriteLine((8 - wrongGuessCount) + " guesses left!");
+                Console.WriteLine();
             }
             if (wrongGuessCount == 2)
             {
-                //Console.Clear();
-                Console.WriteLine("gallows2");
-                return true;
+                Console.WriteLine(
+                @"   _________   " + Environment.NewLine +
+                @"   |/      |   " + Environment.NewLine +
+                @"   |      (+)  " + Environment.NewLine +
+                @"   |           " + Environment.NewLine +
+                @"   |           " + Environment.NewLine +
+                @"   |           " + Environment.NewLine +
+                @"   |           " + Environment.NewLine +
+                @"   |           " + Environment.NewLine +
+                @"___|___        " + Environment.NewLine);
+                Console.WriteLine();
+                Console.WriteLine((8 - wrongGuessCount) + " guesses left!");
+                Console.WriteLine();
             }
             if (wrongGuessCount == 3)
             {
-                //Console.Clear();
-                Console.WriteLine("gallows3");
-                return true;
+                Console.WriteLine(
+                @"   _________   " + Environment.NewLine +
+                @"   |/      |   " + Environment.NewLine +
+                @"   |      (+)  " + Environment.NewLine +
+                @"   |       |   " + Environment.NewLine +
+                @"   |       |   " + Environment.NewLine +
+                @"   |           " + Environment.NewLine +
+                @"   |           " + Environment.NewLine +
+                @"   |           " + Environment.NewLine +
+                @"___|___        " + Environment.NewLine);
+                Console.WriteLine();
+                Console.WriteLine((8 - wrongGuessCount) + " guesses left!");
+                Console.WriteLine();
             }
             if (wrongGuessCount == 4)
             {
-                //Console.Clear();
-                Console.WriteLine("gallows4");
-                return true;
+                Console.WriteLine(
+                @"   _________   " + Environment.NewLine +
+                @"   |/      |   " + Environment.NewLine +
+                @"   |      (+)  " + Environment.NewLine +
+                @"   |      /|\  " + Environment.NewLine +
+                @"   |       |   " + Environment.NewLine +
+                @"   |           " + Environment.NewLine +
+                @"   |           " + Environment.NewLine +
+                @"   |           " + Environment.NewLine +
+                @"___|___        " + Environment.NewLine);
+                Console.WriteLine();
+                Console.WriteLine((8 - wrongGuessCount) + " guesses left!");
+                Console.WriteLine();
             }
             if (wrongGuessCount == 5)
             {
-                //Console.Clear();
-                Console.WriteLine("gallows5");
-                return true;
+                Console.WriteLine(
+                @"   _________   " + Environment.NewLine +
+                @"   |/      |   " + Environment.NewLine +
+                @"   |      (+)  " + Environment.NewLine +
+                @"   |      /|\  " + Environment.NewLine +
+                @"   |       |   " + Environment.NewLine +
+                @"   |      /    " + Environment.NewLine +
+                @"   |           " + Environment.NewLine +
+                @"   |           " + Environment.NewLine +
+                @"___|___        " + Environment.NewLine);
+                Console.WriteLine();
+                Console.WriteLine((8 - wrongGuessCount) + " guesses left!");
+                Console.WriteLine();
             }
             if (wrongGuessCount == 6)
             {
-                //Console.Clear();
-                Console.WriteLine("gallows6");
+                Console.WriteLine(
+                @"   _________   " + Environment.NewLine +
+                @"   |/      |   " + Environment.NewLine +
+                @"   |      (+)  " + Environment.NewLine +
+                @"   |      /|\  " + Environment.NewLine +
+                @"   |       |   " + Environment.NewLine +
+                @"   |      / \  " + Environment.NewLine +
+                @"   |           " + Environment.NewLine +
+                @"   |           " + Environment.NewLine +
+                @"___|___        " + Environment.NewLine);
+                Console.WriteLine();
+                Console.WriteLine((8 - wrongGuessCount) + " guesses left!");
+                Console.WriteLine();
                 return true;
             }
             if (wrongGuessCount == 7)
             {
-                //Console.Clear();
-                Console.WriteLine("gallows7");
-                return true;
+                Console.WriteLine(
+                @"   _________   " + Environment.NewLine +
+                @"   |/      |   " + Environment.NewLine +
+                @"   |      (+)  " + Environment.NewLine +
+                @"   |      /|\  " + Environment.NewLine +
+                @"   |       |   " + Environment.NewLine +
+                @"   |     _/ \  " + Environment.NewLine +
+                @"   |           " + Environment.NewLine +
+                @"   |           " + Environment.NewLine +
+                @"___|___        " + Environment.NewLine);
+                Console.WriteLine();
+                Console.WriteLine((8 - wrongGuessCount) + " guesses left!");
+                Console.WriteLine();
             }
             if (wrongGuessCount == 8)
             {
-                Console.WriteLine("gallows8");
-                Console.WriteLine(wordToGuess.ToUpper() + " was the word.");
+                Console.WriteLine(
+                @"   _________   " + Environment.NewLine +
+                @"   |/      |   " + Environment.NewLine +
+                @"   |      (+)  " + Environment.NewLine +
+                @"   |      /|\  " + Environment.NewLine +
+                @"   |       |   " + Environment.NewLine +
+                @"   |     _/ \_ " + Environment.NewLine +
+                @"   |           " + Environment.NewLine +
+                @"   |           " + Environment.NewLine +
+                @"___|___        " + Environment.NewLine);
+                Console.WriteLine();
+                Console.WriteLine((8 - wrongGuessCount) + " guesses left!");
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(wordToGuessSpaces.ToUpper() + " was the word.");
+                Console.ResetColor();
                 Console.WriteLine();
                 return true;
             }
@@ -303,33 +401,43 @@ namespace Hangman
             }
         }
 
-        public static bool WordBuilder(string guessCurrent)
-        {
-            //need to find a way to change underscores to letters
-            //Console.WriteLine(underscoreGuessTempString);
+        /* public static string WordBuilder(string guessCurrent)
+         {
+         * 
+         * string str = "Characters in a string.";
+ System.Text.StringBuilder sb = new System.Text.StringBuilder();
+ foreach (var ch in str)
+    sb.Append(" '").Append(ch).Append("' ");
 
-            string underscores = new String('_', numUnderscore);
+ Console.WriteLine("Characters in the string:");
+ Console.WriteLine("  {0}", sb);
 
-            if (guessCurrent == String.Empty || !(wordToGuess.Contains(guessCurrent)))
-            {
-                Console.WriteLine();
-                Console.WriteLine();
-                Console.WriteLine("_ _ _ _ 1");
-                return true;
-            }
 
-            else if (wordToGuess.Contains(guessCurrent))
-            {
-                underscoresGuessTempString += underscores.Replace("_", guessCurrent);
-                Console.WriteLine();
-                Console.WriteLine();
-                Console.WriteLine("_ _ _ _ 2");
-                Console.WriteLine(underscoresGuessTempString);
-                return true;
-            }
+             //need to find a way to change underscores to letters
+             //Console.WriteLine(underscoreGuessTempString);
 
-            return false;
-        }
+           //  Console.Write("The word has " + wordToGuess.Length + " letters: ");
+            // Console.WriteLine(wordToGuess);
+            // {
+             //    for (int i = 0; i < wordToGuess.Length; i++)
+              //   {
+               //      wordToGuess = wordToGuess.Replace(wordToGuess[i], '_');
+                     //wordToGuess = wordToGuess.add(wordToGuess[(!i%2)], ' ');
+             //    }
+              //   Console.WriteLine(wordToGuess);
+            // }
+            // return string.Empty;
+             /*
+         if (guessCurrent.Contains(wordToGuess[i].ToString().ToUpper()))
+         {
+         underscoreGuessTempString = underscoreGuessTempString.Replace('_', guessCurrent);
+
+         }	
+         if (correctGuessString != String.Empty)
+         {
+             underscoreGuessTempString += wordToGuess[i];
+             Console.WriteLine(underscoreGuessTempString);
+         }*/
 
         public static bool PlayAgainTrue(string yesNoInput)
         {
@@ -353,10 +461,5 @@ namespace Hangman
             }
             return false;
         }
-
-        // public static string SetDifficulty()
-        // {
-
-        // }
     }
 }
