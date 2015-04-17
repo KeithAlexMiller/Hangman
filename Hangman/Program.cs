@@ -12,13 +12,13 @@ namespace Hangman
         static string nameUserInput = string.Empty;
 
         //holds current user guess
-        static string guessCurrent = string.Empty;
+        static string guessCurrent = String.Empty;
 
         //holds word to guess
         static string wordToGuess = string.Empty;
 
         //used for combined correct guesses and underscores (ie: if word is "baseball" B A _ E B A _ _ )
-        static string underscoreGuessTempString = string.Empty;
+        static string underscoresGuessTempString = string.Empty;
 
         //number of wrong guesses
         static int wrongGuessCount = 0;
@@ -27,41 +27,114 @@ namespace Hangman
         static int numUnderscore = wordToGuess.Length;
 
         //return dashes and letters
-        public static string underscores = string.Concat(Enumerable.Repeat("_ ", numUnderscore));
+        //static string underscores = new String('_', numUnderscore);
+       
+            //String.Concat(Enumerable.Repeat("_ ", numUnderscore));
 
-        //used to create a string of wrong letters/words that have been guessed 
-        string wrongGuessString = string.Empty;
+        //used to compare with wordToGuess and determine if word is complete
+        static string correctGuessString = string.Empty;
 
-        //used to combine correct guess letters with blanks (underscores)
-        string correctGuessString = string.Empty;
+        //used to display incorrectly guessed letters to user
+        static string incorrectGuessString = string.Empty;
 
-        //if false game will end
+        //used to store play again "yes"/"no" input from user
+        static string yesNoInput = string.Empty;
+
+        //if false program will end
         static bool gameOn = true;
+
+        //if true user will be asked to play again
+        static bool gameOver = false;
 
         static void Main(string[] args)
         {
-            Console.Write("Please enter your name: ");
-            string nameUserInput = Console.ReadLine();
-            Greeting(nameUserInput);
-            HowToPlay();
-            RandomWordSeletor();
-            //diplay word blanks
-            BuildTheGallows(wrongGuessCount);
-            WordBuilder(underscores);
-            string guessCurrent = Console.ReadLine();
-            IsGuessCorrect(guessCurrent);
+            while (gameOn == true)
+            {
+                if (gameOver == false)
+                {
+                    if (nameUserInput == String.Empty || IsValidInput(nameUserInput) == false)
+                    {
+                        Console.Write("Please enter your name: ");
+                        nameUserInput = Console.ReadLine();
+                        IsValidInput(nameUserInput);
+                    }
 
+                    if (nameUserInput != String.Empty)
+                    {
+                        Greeting(nameUserInput);
+                        HowToPlay();
+                        RandomWordSeletor();
+                        //diplay word blanks
+                    }
 
-            Console.ReadKey();
+                    while (!(correctGuessString.Contains(wordToGuess)) && wrongGuessCount < 8)
+                    {
+                        BuildTheGallows(wrongGuessCount);
+                        WordBuilder(guessCurrent);
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("                                Incorrect Letters: " + incorrectGuessString);
+                        Console.ResetColor();
+                        AskForGuessInput(guessCurrent);
+                        guessCurrent = Console.ReadLine();
 
-            //chooses random number
+                        if (IsValidInput(guessCurrent) && wrongGuessCount <= 8)
+                        {
+                            IsGuessCorrect(guessCurrent);
+                            Console.Clear();
+                            guessCurrent = String.Empty;
+                        }
 
-            //Console.Clear();
+                        if (wrongGuessCount >= 8)
+                        {
+                            BuildTheGallows(wrongGuessCount);
+                            Console.WriteLine("Sorry buddy, you lose. Press any key.");
+                            Console.ReadKey();
+                            gameOver = true;
+                            Console.Clear();
+                        }
+                        if (correctGuessString.Contains(wordToGuess)|| guessCurrent == wordToGuess)
+                        {
+                            WordBuilder(guessCurrent);
+                            Console.WriteLine("You won the game! ...not very exciting, is it?");
+                            Console.ResetColor();
+                            Console.ReadKey();
+                            Console.Clear();
+                            gameOver = true;
+                        }
+                    }
+                }
+                if (gameOver == true)
+                {
+                    Console.Write("Would you like to play again? YES or NO? ");
+                    yesNoInput = Console.ReadLine();
+                    PlayAgainTrue(yesNoInput);
+                }
+            }
+        }
+
+        public static bool IsValidInput(string input)
+        {
+            if (input.All(Char.IsLetter) && input != null && input != string.Empty)
+            {
+                return true;
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine();
+                Console.WriteLine("Enter letters only. Please try again.");
+                nameUserInput = string.Empty;
+                guessCurrent = string.Empty;
+                Console.ResetColor();
+                System.Threading.Thread.Sleep(1000);
+                Console.Clear();
+                return false;
+            }
         }
 
         public static string Greeting(string name)
         {
-            Console.WriteLine();
+            Console.Clear();
             Console.WriteLine("Hello " + name + "!");
             return name;
         }
@@ -69,10 +142,16 @@ namespace Hangman
         public static bool HowToPlay()
         {
             Console.WriteLine();
-            Console.WriteLine("Welcome to Hangman. Here are the rules...");
+            Console.WriteLine("                           Welcome to HANGMAN!");
+            Console.WriteLine();
+            Console.WriteLine("Here are the rules:");
+            Console.WriteLine();
+            Console.WriteLine("You have 8 guesses to the fill in the blanks by guessing a letter or the whole   word. Every time you guess wrong, the little man under the gallows is one step closer to death. Good Luck!");
+            Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine("A man's very life is in your hands. Press any key to continue.");
             Console.ReadKey();
+            Console.Clear();
             return true;
         }
 
@@ -88,7 +167,7 @@ namespace Hangman
             WordList.Add("laughing");
             WordList.Add("talking");
             WordList.Add("turning");
-            WordList.Add("burrning");
+            WordList.Add("burning");
             WordList.Add("exploding");
 
             //sets random number for the game
@@ -98,87 +177,67 @@ namespace Hangman
             int index = rng.Next(WordList.Count);
 
             //set word for user to guess
-            wordToGuess = WordList[index];
+            wordToGuess = WordList[index].ToUpper();
 
             return wordToGuess;
 
         }
 
-        public static bool WordBuilder(string guessString)
-        {
-
-            //need to find a way to change underscores to lettes
-            //Console.WriteLine(underscoreGuessTempString);
-
-            if (wordToGuess.Contains(guessString))
-            {
-                Console.WriteLine(guessString);
-                return true;
-            }
-            else if (!(wordToGuess.Contains(guessString)))
-            {
-                Console.WriteLine(underscores);
-                return true;
-            }
-
-            return false; 
-        }
-
         public static bool BuildTheGallows(int wrongGuessCount)
         {
-            string gallows0 = "gallows0";
-            string gallows1 = "gallows1";
-            string gallows2 = "gallows2";
-            string gallows3 = "gallows3";
-            string gallows4 = "gallows4";
-            string gallows5 = "gallows5";
-            string gallows6 = "gallows6";
-            string gallows7 = "gallows7";
-            string gallows8 = "gallows8";
-
             if (wrongGuessCount == 0)
             {
-                Console.WriteLine(gallows0);
+                //Console.Clear();
+                Console.WriteLine("gallows0");
                 return true;
             }
             if (wrongGuessCount == 1)
             {
-                Console.WriteLine(gallows1);
+                //Console.Clear();
+                Console.WriteLine("gallows1");
                 return true;
             }
             if (wrongGuessCount == 2)
             {
-                Console.WriteLine(gallows2);
+                //Console.Clear();
+                Console.WriteLine("gallows2");
                 return true;
             }
             if (wrongGuessCount == 3)
             {
-                Console.WriteLine(gallows3);
+                //Console.Clear();
+                Console.WriteLine("gallows3");
                 return true;
             }
             if (wrongGuessCount == 4)
             {
-                Console.WriteLine(gallows4);
+                //Console.Clear();
+                Console.WriteLine("gallows4");
                 return true;
             }
             if (wrongGuessCount == 5)
             {
-                Console.WriteLine(gallows5);
+                //Console.Clear();
+                Console.WriteLine("gallows5");
                 return true;
             }
             if (wrongGuessCount == 6)
             {
-                Console.WriteLine(gallows6);
+                //Console.Clear();
+                Console.WriteLine("gallows6");
                 return true;
             }
             if (wrongGuessCount == 7)
             {
-                Console.WriteLine(gallows7);
+                //Console.Clear();
+                Console.WriteLine("gallows7");
                 return true;
             }
             if (wrongGuessCount == 8)
             {
-                Console.WriteLine(gallows8);
+                Console.WriteLine("gallows8");
+                Console.WriteLine(wordToGuess.ToUpper() + " was the word.");
+                Console.WriteLine();
                 return true;
             }
             else
@@ -188,33 +247,111 @@ namespace Hangman
 
         }
 
-
-        /* public static bool ValidateUserInput(string userInput)
-            
-         if ()
-         {
-             return true;
-         }
-
-         else if ()
-     {
-         Console.WriteLine("User input is not valid. Please only enter a letter or a word.");
-     return false;
-     }
-         */
-
-        public static bool IsGuessCorrect(string currentGuess)
+        public static bool AskForGuessInput(string guessCurrent)
         {
-            if (wordToGuess.Contains(currentGuess))
+            if (guessCurrent == String.Empty)
             {
-                Console.WriteLine("You guessed correctly!");
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.Write("Type a letter or guess the word and hit ENTER: ");
                 return true;
             }
-            //else (!(wordToGuess.Contains(currentGuess)))
+            return false;
+        }
+
+
+        public static bool IsGuessCorrect(string guessCurrent)
+        {
+            guessCurrent = guessCurrent.ToUpper();
+
+            if (wordToGuess.Contains(guessCurrent) && !correctGuessString.Contains(guessCurrent))
             {
+                correctGuessString += guessCurrent;
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("You guessed correctly!");
+                guessCurrent = String.Empty;
+                Console.ResetColor();
+                System.Threading.Thread.Sleep(1000);
+                return true;
+            }
+            else if (correctGuessString.Contains(guessCurrent) || incorrectGuessString.Contains(guessCurrent))
+            {
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("Really?! You already guessed " + guessCurrent + ".");
+                Console.ResetColor();
+                System.Threading.Thread.Sleep(1000);
+                return true;
+            }
+            else if (!(wordToGuess.Contains(guessCurrent)))
+            {
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Your killing me!");
+                Console.WriteLine();
+                wrongGuessCount++;
+                incorrectGuessString += guessCurrent;
+                Console.WriteLine(guessCurrent + " is not correct.");
+                Console.ResetColor();
+                System.Threading.Thread.Sleep(1000);
                 return false;
             }
+            else
+            {
+                return false;
+            }
+        }
+
+        public static bool WordBuilder(string guessCurrent)
+        {
+            //need to find a way to change underscores to letters
+            //Console.WriteLine(underscoreGuessTempString);
+
+            string underscores = new String('_', numUnderscore);
+
+            if (guessCurrent == String.Empty || !(wordToGuess.Contains(guessCurrent)))
+            {
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine("_ _ _ _ 1");
+                return true;
+            }
+
+            else if (wordToGuess.Contains(guessCurrent))
+            {
+                underscoresGuessTempString += underscores.Replace("_", guessCurrent);
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine("_ _ _ _ 2");
+                Console.WriteLine(underscoresGuessTempString);
+                return true;
+            }
+
+            return false;
+        }
+
+        public static bool PlayAgainTrue(string yesNoInput)
+        {
+            if (IsValidInput(yesNoInput) && @"Yy".Any(yesNoInput.Contains))
+            {
+                Console.WriteLine();
+                Console.WriteLine("Sweet. Let's play again!");
+                wrongGuessCount = 0;
+                correctGuessString = string.Empty;
+                incorrectGuessString = string.Empty;
+
+                Console.ReadKey();
+                return gameOver = false;
+            }
+            if (IsValidInput(yesNoInput) && @"Nn".Any(yesNoInput.Contains))
+            {
+                Console.WriteLine();
+                Console.WriteLine("Quitter...");
+                Console.ReadKey();
+                return gameOn = false;
+            }
+            return false;
         }
 
         // public static string SetDifficulty()
